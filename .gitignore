@@ -398,3 +398,6 @@ FodyWeavers.xsd
 *.sln.iml
 
 .idea/
+*.db
+*.db-shm
+*.db-wal
