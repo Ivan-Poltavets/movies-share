@@ -2,6 +2,7 @@
 using MovieShare.Application.Profiles;
 using MovieShare.Application.Services;
 using MovieShare.Application.Services.Interfaces;
+using MovieShare.Domain.Interfaces;
 using MovieShare.Infrastructure;
 
 namespace MovieShare.API
@@ -16,7 +17,10 @@ namespace MovieShare.API
 			});
 			services.AddAutoMapper(typeof(MovieToDto));
 
+			services.AddScoped<IMoviesRepository, MoviesRepository>();
+
 			services.AddScoped<ITmdbDataService, TmdbDataService>();
+			services.AddScoped<IMoviesService, MoviesService>();
 		}
 	}
 }

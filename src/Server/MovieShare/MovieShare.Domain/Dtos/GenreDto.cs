@@ -1,6 +1,6 @@
-﻿namespace MovieShare.Domain.Entities
+﻿namespace MovieShare.Domain.Dtos
 {
-	public class Genre
+	public class GenreDto
 	{
 		public int Id { get; set; }
 		public string Name { get; set; } = string.Empty;

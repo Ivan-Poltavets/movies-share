@@ -10,10 +10,12 @@
     <None Remove="Dtos\" />
     <None Remove="Entities\" />
     <None Remove="Interfaces\" />
+    <None Remove="Dtos\Tmdb\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Dtos\" />
     <Folder Include="Entities\" />
     <Folder Include="Interfaces\" />
+    <Folder Include="Dtos\Tmdb\" />
   </ItemGroup>
 </Project>

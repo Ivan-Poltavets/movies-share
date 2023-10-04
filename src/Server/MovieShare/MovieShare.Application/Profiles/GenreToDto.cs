@@ -8,10 +8,7 @@ namespace MovieShare.Application.Profiles
 	{
 		public GenreToDto()
 		{
-			CreateMap<Genre, GenreResponseDto>()
-				.ForMember(x => x.id, opt => opt.MapFrom(e => e.Id))
-				.ForMember(x => x.name, opt => opt.MapFrom(e => e.Name))
-				.ReverseMap();
+			CreateMap<Genre, GenreDto>().ReverseMap();
 		}
 	}
 }

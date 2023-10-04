@@ -34,7 +34,7 @@ namespace MovieShare.Application.Services
                 }
 			}
 
-			return null;
+			return result.results;
 		}
 
 		public async Task<List<Genre>> RequestGenresAsync()
