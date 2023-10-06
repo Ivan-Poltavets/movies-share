@@ -4,6 +4,11 @@ using MovieShare.Application.Services;
 using MovieShare.Application.Services.Interfaces;
 using MovieShare.Domain.Interfaces;
 using MovieShare.Infrastructure;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
+using MovieShare.API.Profiles;
 
 namespace MovieShare.API
 {
@@ -15,12 +20,73 @@ namespace MovieShare.API
 			{
 				options.UseSqlite(configuration.GetConnectionString("MovieDbContext"));
 			});
-			services.AddAutoMapper(typeof(MovieToDto));
+			services.AddAutoMapper(typeof(MovieToDto), typeof(MoviesByRatedRequestToDto));
 
 			services.AddScoped<IMoviesRepository, MoviesRepository>();
 
 			services.AddScoped<ITmdbDataService, TmdbDataService>();
 			services.AddScoped<IMoviesService, MoviesService>();
+		}
+
+		public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+		{
+			services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+				.AddJwtBearer(options =>
+				{
+					var encodedSecret = Encoding.UTF8.GetBytes(configuration["JwtAuthentication:Secret"]);
+
+					options.TokenValidationParameters = new TokenValidationParameters
+					{
+						ValidateAudience = true,
+						ValidateIssuer = true,
+						ValidateLifetime = true,
+						ValidIssuer = configuration["JwtAuthentication:Issuer"],
+						ValidAudience = configuration["JwtAuthentication:Audience"],
+						IssuerSigningKey = new SymmetricSecurityKey(encodedSecret)
+					};
+				});
+		}
+
+		public static void AddSwagger(this IServiceCollection services)
+		{
+			services.AddSwaggerGen(options =>
+			{
+				options.SwaggerDoc("V1", new OpenApiInfo
+				{
+					Version = "V1",
+					Title = "MovieShare",
+					Description = "MovieShare Web API"
+				});
+
+				options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+				{
+					Scheme = "Bearer",
+					BearerFormat = "JWT",
+					In = ParameterLocation.Header,
+					Name = "Authorization",
+					Description = "Bearer Auth with a JWT",
+					Type = SecuritySchemeType.Http
+				});
+
+				options.AddSecurityRequirement(new OpenApiSecurityRequirement
+				{
+					{
+						new OpenApiSecurityScheme
+						{
+							Reference = new OpenApiReference
+							{
+								Id = "Bearer",
+								Type = ReferenceType.SecurityScheme
+							}
+						},
+						new List<string>()
+					}
+				});
+			});
 		}
 	}
 }

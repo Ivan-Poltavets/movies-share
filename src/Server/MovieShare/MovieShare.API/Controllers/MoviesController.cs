@@ -1,63 +1,54 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MovieShare.Infrastructure;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using MovieShare.API.Requests;
+using MovieShare.Application.Services.Interfaces;
+using MovieShare.Domain.Dtos;
 
 namespace MovieShare.API.Controllers
 {
     [Route("api/[controller]")]
     public class MoviesController : ControllerBase
     {
-        private readonly MovieDbContext _context;
+        private readonly IMoviesService _moviesService;
+        private readonly IMapper _mapper;
 
-        public MoviesController(MovieDbContext context)
+        public MoviesController(IMoviesService moviesService, IMapper mapper)
         {
-            _context = context;
+            _moviesService = moviesService;
+            _mapper = mapper;
         }
 
-        // GET: api/values
         [HttpGet]
-        public IActionResult Get()
+        [Route("popular")]
+        public async Task<ActionResult<MovieDto>> GetMoviesByPopularity(int page = 0, int itemsCount = 20)
         {
-            return Ok(_context.Movies
-                .Take(20));
+            var result = await _moviesService.GetMoviesByPopularityAsync(page, itemsCount);
+            return Ok(result);
         }
 
         [Route("genres")]
         [HttpGet]
-        public IActionResult GetGenre()
+        public async Task<ActionResult<MovieDto>> GetGenre(List<GenreDto> genreDtos, int page = 0, int itemsCount = 20)
         {
-            return Ok(_context.Genres.ToList());
+            var result = await _moviesService.GetMoviesByGenresAsync(genreDtos, page, itemsCount);
+            return Ok(result);
         }
 
-        [Route("moviesgenres")]
+        [Route("top_rated")]
         [HttpGet]
-        public IActionResult GetMoviesGenres()
+        public async Task<ActionResult<MovieDto>> GetMoviesByTopRated(int page = 0, int itemsCount = 20)
         {
-            return Ok(_context.MoviesGenres.Take(100).ToList());
+            var result = await _moviesService.GetMoviesByTopRatedAsync(page, itemsCount);
+            return Ok(result);
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [Route("rated")]
+        [HttpGet]
+        public async Task<ActionResult<MovieDto>> GetMoviesByRated(MoviesByRatedRequest request, int page = 0, int itemsCount = 20)
         {
-            return "value";
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            var rated = _mapper.Map<RatedDto>(request);
+            var result = await _moviesService.GetMoviesByRatedAsync(rated, page, itemsCount);
+            return Ok(result);
         }
     }
 }
