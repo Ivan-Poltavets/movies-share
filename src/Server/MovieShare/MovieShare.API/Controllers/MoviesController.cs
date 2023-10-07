@@ -9,12 +9,12 @@ namespace MovieShare.API.Controllers
     [Route("api/[controller]")]
     public class MoviesController : ControllerBase
     {
-        private readonly IMoviesService _moviesService;
+        private readonly IMovieService _movieService;
         private readonly IMapper _mapper;
 
-        public MoviesController(IMoviesService moviesService, IMapper mapper)
+        public MoviesController(IMovieService movieService, IMapper mapper)
         {
-            _moviesService = moviesService;
+            _movieService = movieService;
             _mapper = mapper;
         }
 
@@ -22,7 +22,7 @@ namespace MovieShare.API.Controllers
         [Route("popular")]
         public async Task<ActionResult<MovieDto>> GetMoviesByPopularity(int page = 0, int itemsCount = 20)
         {
-            var result = await _moviesService.GetMoviesByPopularityAsync(page, itemsCount);
+            var result = await _movieService.GetMoviesByPopularityAsync(page, itemsCount);
             return Ok(result);
         }
 
@@ -30,7 +30,7 @@ namespace MovieShare.API.Controllers
         [HttpGet]
         public async Task<ActionResult<MovieDto>> GetGenre(List<GenreDto> genreDtos, int page = 0, int itemsCount = 20)
         {
-            var result = await _moviesService.GetMoviesByGenresAsync(genreDtos, page, itemsCount);
+            var result = await _movieService.GetMoviesByGenresAsync(genreDtos, page, itemsCount);
             return Ok(result);
         }
 
@@ -38,7 +38,7 @@ namespace MovieShare.API.Controllers
         [HttpGet]
         public async Task<ActionResult<MovieDto>> GetMoviesByTopRated(int page = 0, int itemsCount = 20)
         {
-            var result = await _moviesService.GetMoviesByTopRatedAsync(page, itemsCount);
+            var result = await _movieService.GetMoviesByTopRatedAsync(page, itemsCount);
             return Ok(result);
         }
 
@@ -47,7 +47,7 @@ namespace MovieShare.API.Controllers
         public async Task<ActionResult<MovieDto>> GetMoviesByRated(MoviesByRatedRequest request, int page = 0, int itemsCount = 20)
         {
             var rated = _mapper.Map<RatedDto>(request);
-            var result = await _moviesService.GetMoviesByRatedAsync(rated, page, itemsCount);
+            var result = await _movieService.GetMoviesByRatedAsync(rated, page, itemsCount);
             return Ok(result);
         }
     }

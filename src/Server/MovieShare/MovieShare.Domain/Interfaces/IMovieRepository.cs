@@ -2,7 +2,7 @@
 
 namespace MovieShare.Domain.Interfaces
 {
-    public interface IMoviesRepository : IBaseRepository<Movie>
+    public interface IMovieRepository : IBaseRepository<Movie>
 	{
         Task<List<Movie>> GetByPopularityAsync(int page, int itemsCount);
         Task<List<Movie>> GetByTopRatedAsync(int page, int itemsCount);

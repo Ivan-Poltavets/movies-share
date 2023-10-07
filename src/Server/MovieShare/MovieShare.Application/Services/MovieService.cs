@@ -6,13 +6,13 @@ using MovieShare.Domain.Interfaces;
 
 namespace MovieShare.Application.Services
 {
-	public class MoviesService : IMoviesService
+	public class MovieService : IMovieService
 	{
-		private readonly IMoviesRepository _moviesRepository;
+		private readonly IMovieRepository _moviesRepository;
 		private readonly IMapper _mapper;
 
-		public MoviesService(
-			IMoviesRepository moviesRepository,
+		public MovieService(
+			IMovieRepository moviesRepository,
 			IMapper mapper)
 		{
 			_moviesRepository = moviesRepository;

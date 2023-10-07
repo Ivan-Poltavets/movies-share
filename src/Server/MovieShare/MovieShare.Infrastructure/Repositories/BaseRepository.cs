@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieShare.Domain.Interfaces;
 
-namespace MovieShare.Infrastructure
+namespace MovieShare.Infrastructure.Repositories
 {
 	public class BaseRepository<TEntity> : IBaseRepository<TEntity>
 		where TEntity : class

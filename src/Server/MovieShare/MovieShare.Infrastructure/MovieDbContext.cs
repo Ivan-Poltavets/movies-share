@@ -14,6 +14,7 @@ namespace MovieShare.Infrastructure
 		public DbSet<Movie> Movies { get; set; }
 		public DbSet<Genre> Genres { get; set; }
 		public DbSet<MovieGenre> MoviesGenres { get; set; }
+		public DbSet<User> Users { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

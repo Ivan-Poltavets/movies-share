@@ -2,11 +2,11 @@
 using MovieShare.Domain.Entities;
 using MovieShare.Domain.Interfaces;
 
-namespace MovieShare.Infrastructure
+namespace MovieShare.Infrastructure.Repositories
 {
-	public class MoviesRepository : BaseRepository<Movie>, IMoviesRepository
+	public class MovieRepository : BaseRepository<Movie>, IMovieRepository
 	{
-		public MoviesRepository(MovieDbContext context) : base(context)
+		public MovieRepository(MovieDbContext context) : base(context)
 		{
 		}
 

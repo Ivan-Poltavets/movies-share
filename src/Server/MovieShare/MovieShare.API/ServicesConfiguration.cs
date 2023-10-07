@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using MovieShare.API.Profiles;
+using MovieShare.Infrastructure.Repositories;
 
 namespace MovieShare.API
 {
@@ -22,10 +23,13 @@ namespace MovieShare.API
 			});
 			services.AddAutoMapper(typeof(MovieToDto), typeof(MoviesByRatedRequestToDto));
 
-			services.AddScoped<IMoviesRepository, MoviesRepository>();
+			services.AddScoped<IMovieRepository, MovieRepository>();
+			services.AddScoped<IUserRepository, UserRepository>();
 
 			services.AddScoped<ITmdbDataService, TmdbDataService>();
-			services.AddScoped<IMoviesService, MoviesService>();
+			services.AddScoped<IMovieService, MovieService>();
+			services.AddScoped<IAuthenticationService, AuthenticationService>();
+			services.AddScoped<IUserService, UserService>();
 		}
 
 		public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
@@ -37,15 +41,15 @@ namespace MovieShare.API
 			})
 				.AddJwtBearer(options =>
 				{
-					var encodedSecret = Encoding.UTF8.GetBytes(configuration["JwtAuthentication:Secret"]);
+					var encodedSecret = Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]);
 
 					options.TokenValidationParameters = new TokenValidationParameters
 					{
 						ValidateAudience = true,
 						ValidateIssuer = true,
 						ValidateLifetime = true,
-						ValidIssuer = configuration["JwtAuthentication:Issuer"],
-						ValidAudience = configuration["JwtAuthentication:Audience"],
+						ValidIssuer = configuration["Jwt:Issuer"],
+						ValidAudience = configuration["Jwt:Audience"],
 						IssuerSigningKey = new SymmetricSecurityKey(encodedSecret)
 					};
 				});
