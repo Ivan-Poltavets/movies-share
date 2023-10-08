@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieShare.API.Requests;
 using MovieShare.Application.Services.Interfaces;
@@ -7,6 +8,7 @@ using MovieShare.Domain.Dtos;
 namespace MovieShare.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class MoviesController : ControllerBase
     {
         private readonly IMovieService _movieService;
