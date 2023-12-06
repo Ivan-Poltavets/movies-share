@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using MovieShare.Application.Services.Interfaces;
 using MovieShare.Domain.Dtos;
 using MovieShare.Domain.Entities;
@@ -13,11 +14,15 @@ namespace MovieShare.Application.Services
 	{
 		private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
+        private readonly IPurchasedMovieRepository _purchasedMovieRepository;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IPurchasedMovieRepository purchasedMovieRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _configuration = configuration;
+            _purchasedMovieRepository = purchasedMovieRepository;
         }
 
         public async Task<UserDto> CreateAsync(UserDto userDto)
@@ -37,6 +42,27 @@ namespace MovieShare.Application.Services
                 throw new Exception();
 
             return _mapper.Map<UserDto>(result);
+        }
+
+        public async Task UploadUserImageAsync(int id, byte[] content)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            //filename + extension
+            var fileName = Guid.NewGuid().ToString();
+            var imagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), _configuration["FileStoragePath"], fileName);
+            using (var writer = new FileStream(imagePath, FileMode.Create))
+            {
+                await writer.WriteAsync(content, 0, content.Length);
+            }
+
+            user.ImagePath = $"/{fileName}";
+            await _userRepository.UpdateAsync(user);
+        }
+
+        public async Task<List<PurchasedMovie>> GetUserMovies(int userId, int index, int itemCount)
+        {
+            var movies = await _purchasedMovieRepository.GetByUserIdAsync(userId, index, itemCount);
+            return movies;
         }
 
         private string ComputePasswordHash(string password, string salt)

@@ -9,6 +9,7 @@ namespace MovieShare.Application.Services.Interfaces
         Task<List<MovieResponseDto>> RequestAllPopularMoviesAsync();
         List<MovieGenre> ReturnMoviesGenres(List<MovieResponseDto> movieDtos);
         List<Movie> MapMovieDtosToMovie(List<MovieResponseDto> movieDtos);
+        Task<byte[]> GetMovieImage(string imagePath);
     }
 }
 

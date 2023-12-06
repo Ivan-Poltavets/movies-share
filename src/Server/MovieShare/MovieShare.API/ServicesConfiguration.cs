@@ -25,11 +25,13 @@ namespace MovieShare.API
 
 			services.AddScoped<IMovieRepository, MovieRepository>();
 			services.AddScoped<IUserRepository, UserRepository>();
+			services.AddScoped<IGenreRepository, GenreRepository>();
 
 			services.AddScoped<ITmdbDataService, TmdbDataService>();
 			services.AddScoped<IMovieService, MovieService>();
 			services.AddScoped<IAuthenticationService, AuthenticationService>();
 			services.AddScoped<IUserService, UserService>();
+			services.AddScoped<IGenreService, GenreService>();
 		}
 
 		public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)

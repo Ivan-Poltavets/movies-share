@@ -15,6 +15,7 @@
         public bool Video { get; set; }
         public double VoteAverage { get; set; }
         public int VoteCount { get; set; }
+        public decimal Price { get; set; }
     }
 }
 

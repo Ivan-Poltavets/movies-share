@@ -43,6 +43,12 @@ namespace MovieShare.Application.Services
 			var movies = await _moviesRepository.GetByTopRatedAsync(page, itemsCount);
 			return _mapper.Map<List<MovieDto>>(movies);
 		}
+
+		public async Task<Movie> GetMovieById(int movieId)
+		{
+			var movie = await _moviesRepository.GetByIdAsync(movieId);
+			return movie;
+		}
 	}
 }
 

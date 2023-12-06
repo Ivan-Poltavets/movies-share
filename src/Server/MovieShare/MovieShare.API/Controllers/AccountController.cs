@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieShare.API.Requests;
 using MovieShare.Application.Services.Interfaces;
@@ -6,8 +8,9 @@ using MovieShare.Domain.Dtos;
 
 namespace MovieShare.API.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserService _userService;
@@ -30,7 +33,7 @@ namespace MovieShare.API.Controllers
 
             if (userDto == null)
                 return Unauthorized();
-
+            
             var expirationPeriod = TimeSpan.FromMinutes(int.Parse(_configuration["Jwt:ExpirationPeriodInMinutes"]));
             var tokenString = _authenticationService.GetTokenString(userDto, expirationPeriod);
             return Ok(tokenString);
@@ -43,6 +46,22 @@ namespace MovieShare.API.Controllers
             var userDto = _mapper.Map<UserDto>(registerRequest);
             userDto = await _userService.CreateAsync(userDto);
             return CreatedAtAction(nameof(Register), userDto);
+        }
+
+        //get updated with front
+        [Authorize]
+        [HttpPost]
+        public void UploadUserImage(byte[] imageContent)
+        {
+
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetPurchasedMovies(int index = 0, int itemCount = 20)
+        {
+            var movies = await _userService.GetUserMovies(UserId, index, itemCount);
+            return Ok(movies);
         }
     }
 }

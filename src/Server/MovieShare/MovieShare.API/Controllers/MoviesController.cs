@@ -28,7 +28,7 @@ namespace MovieShare.API.Controllers
 
         [Route("genres")]
         [HttpGet]
-        public async Task<ActionResult<MovieDto>> GetGenre(List<GenreDto> genreDtos, int page = 0, int itemsCount = 20)
+        public async Task<ActionResult<MovieDto>> GetMoviesByGenres(List<GenreDto> genreDtos, int page = 0, int itemsCount = 20)
         {
             var result = await _movieService.GetMoviesByGenresAsync(genreDtos, page, itemsCount);
             return Ok(result);
@@ -50,6 +50,8 @@ namespace MovieShare.API.Controllers
             var result = await _movieService.GetMoviesByRatedAsync(rated, page, itemsCount);
             return Ok(result);
         }
+
+
     }
 }
 

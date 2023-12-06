@@ -87,6 +87,19 @@ namespace MovieShare.Application.Services
 		{
 			return _mapper.Map<List<Movie>>(movieDtos);
 		}
+
+		public async Task<byte[]> GetMovieImage(string imagePath)
+		{
+			using(var httpClient = new HttpClient())
+			{
+				var result = await httpClient.GetAsync($"{_configuration["TmdbApi:Image"]}/{imagePath}");
+				if (result.IsSuccessStatusCode)
+				{
+					return await result.Content.ReadAsByteArrayAsync();
+				}
+			}
+			return new byte[] {};
+		}
 	}
 }
 

@@ -1,4 +1,5 @@
 ﻿using MovieShare.Domain.Dtos;
+using MovieShare.Domain.Entities;
 
 namespace MovieShare.Application.Services.Interfaces
 {
@@ -8,6 +9,7 @@ namespace MovieShare.Application.Services.Interfaces
         Task<List<MovieDto>> GetMoviesByPopularityAsync(int page, int itemsCount);
         Task<List<MovieDto>> GetMoviesByRatedAsync(RatedDto ratedDto, int page, int itemsCount);
         Task<List<MovieDto>> GetMoviesByTopRatedAsync(int page, int itemsCount);
+        Task<Movie> GetMovieById(int movieId);
     }
 }
 
