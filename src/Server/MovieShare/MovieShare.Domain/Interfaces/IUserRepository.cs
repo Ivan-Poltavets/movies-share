@@ -6,6 +6,7 @@ namespace MovieShare.Domain.Interfaces
 	{
         Task<User> GetByLoginAndPasswordHashAsync(string login, string passwordHash);
         Task<User> GetByLoginAsync(string login);
+        Task<bool> IsUserExistAsync(string username, string email);
     }
 }
 

@@ -23,16 +23,23 @@ namespace MovieShare.API
 			});
 			services.AddAutoMapper(typeof(MovieToDto), typeof(MoviesByRatedRequestToDto));
 
-			services.AddScoped<IMovieRepository, MovieRepository>();
-			services.AddScoped<IUserRepository, UserRepository>();
-			services.AddScoped<IGenreRepository, GenreRepository>();
-
 			services.AddScoped<ITmdbDataService, TmdbDataService>();
 			services.AddScoped<IMovieService, MovieService>();
 			services.AddScoped<IAuthenticationService, AuthenticationService>();
 			services.AddScoped<IUserService, UserService>();
 			services.AddScoped<IGenreService, GenreService>();
+			services.AddScoped<IPaymentService, PaymentService>();
+			services.AddScoped<ITradeService, TradeService>();
 		}
+
+		public static void AddRepositories(this IServiceCollection services)
+		{
+            services.AddScoped<IMovieRepository, MovieRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+			services.AddScoped<ITradeRepository, TradeRepository>();
+        }
 
 		public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
 		{

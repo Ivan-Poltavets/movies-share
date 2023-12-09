@@ -1,8 +1,8 @@
 ﻿using System;
-namespace MovieShare.API.Requests
+namespace MovieShare.API.Requests.Genre
 {
-	public class CreateGenreRequest
-	{
+    public class CreateGenreRequest
+    {
         public string Name { get; set; } = string.Empty;
     }
 }

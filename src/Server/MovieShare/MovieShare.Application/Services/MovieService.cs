@@ -49,6 +49,24 @@ namespace MovieShare.Application.Services
 			var movie = await _moviesRepository.GetByIdAsync(movieId);
 			return movie;
 		}
+
+		public async Task<MovieDto> CreateMovieAsync(MovieDto movieDto)
+		{
+			var movie = _mapper.Map<Movie>(movieDto);
+			await _moviesRepository.CreateAsync(movie);
+			return _mapper.Map<MovieDto>(movie);
+		}
+
+		public async Task UpdateMovieAsync(MovieDto movieDto)
+		{
+			var movie = _mapper.Map<Movie>(movieDto);
+			await _moviesRepository.UpdateAsync(movie);
+		}
+
+		public async Task DeleteMovieAsync(int id)
+		{
+			await _moviesRepository.DeleteAsync(id);
+		}
 	}
 }
 

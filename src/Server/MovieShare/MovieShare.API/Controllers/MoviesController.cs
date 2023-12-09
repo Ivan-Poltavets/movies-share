@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using MovieShare.API.Requests;
+using MovieShare.API.Requests.Movie;
 using MovieShare.Application.Services.Interfaces;
 using MovieShare.Domain.Dtos;
 
@@ -51,7 +51,28 @@ namespace MovieShare.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateMovie([FromBody] CreateMovieRequest createMovieRequest)
+        {
+            var movieDto = _mapper.Map<MovieDto>(createMovieRequest);
+            var result = await _movieService.CreateMovieAsync(movieDto);
+            return Ok(result);
+        }
 
+        [HttpPut]
+        public async Task<IActionResult> UpdateMovie([FromBody] UpdateMovieRequest updateMovieRequest)
+        {
+            var movieDto = _mapper.Map<MovieDto>(updateMovieRequest);
+            await _movieService.UpdateMovieAsync(movieDto);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMovie(int id)
+        {
+            await _movieService.DeleteMovieAsync(id);
+            return NoContent();
+        }
     }
 }
 

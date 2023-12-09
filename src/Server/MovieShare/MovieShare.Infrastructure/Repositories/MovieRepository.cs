@@ -16,6 +16,7 @@ namespace MovieShare.Infrastructure.Repositories
 				.OrderByDescending(x => x.Popularity)
 				.Skip(page * itemsCount)
 				.Take(itemsCount)
+				.AsNoTracking()
 				.ToListAsync();
 
 			return movies;
@@ -27,6 +28,7 @@ namespace MovieShare.Infrastructure.Repositories
 				.OrderByDescending(x => x.VoteAverage)
 				.Skip(page * itemsCount)
 				.Take(itemsCount)
+				.AsNoTracking()
 				.ToListAsync();
 
 			return movies;
@@ -39,6 +41,7 @@ namespace MovieShare.Infrastructure.Repositories
 				.OrderByDescending(x => x.Popularity)
 				.Skip(page * itemsCount)
 				.Take(itemsCount)
+				.AsNoTracking()
 				.ToListAsync();
 
 			return movies;
@@ -54,6 +57,7 @@ namespace MovieShare.Infrastructure.Repositories
 					}))
 				.Skip(page * itemsCount)
 				.Take(itemsCount)
+				.AsNoTracking()
 				.ToListAsync();
 
 			var movies = await _dbSet
@@ -64,9 +68,20 @@ namespace MovieShare.Infrastructure.Repositories
 				}))
 				.Skip(page * itemsCount)
 				.Take(itemsCount)
+				.AsNoTracking()
 				.ToListAsync();
 
 			return movies;
+		}
+
+		public async Task<decimal> GetPriceByMovieIdAsync(int movieId)
+		{
+			var movie = await _dbSet.FindAsync(movieId);
+			if(movie == null)
+			{
+				throw new Exception("Not found");
+			}
+			return movie.Price;
 		}
 	}
 }

@@ -25,6 +25,15 @@ namespace MovieShare.Infrastructure.Repositories
 
 			return user;
 		}
+
+		public async Task<bool> IsUserExistAsync(string username, string email)
+		{
+			var user = await _dbSet
+				.FirstOrDefaultAsync(x => x.Username == username || x.Email == email);
+			if(user != null)
+				return true;
+			return false;
+		}
 	}
 }
 

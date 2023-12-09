@@ -15,18 +15,20 @@ namespace MovieShare.Application.Services
 		private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        private readonly IPurchasedMovieRepository _purchasedMovieRepository;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IPurchasedMovieRepository purchasedMovieRepository)
+        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _configuration = configuration;
-            _purchasedMovieRepository = purchasedMovieRepository;
         }
 
         public async Task<UserDto> CreateAsync(UserDto userDto)
         {
+            if(await _userRepository.IsUserExistAsync(userDto.Username, userDto.Email))
+            {
+                throw new Exception("User exist");
+            }
             var user = _mapper.Map<User>(userDto);
             user.PasswordHash = ComputePasswordHash(userDto.Password, userDto.PasswordSalt);
             var createdUser = await _userRepository.CreateAsync(user);
@@ -57,12 +59,6 @@ namespace MovieShare.Application.Services
 
             user.ImagePath = $"/{fileName}";
             await _userRepository.UpdateAsync(user);
-        }
-
-        public async Task<List<PurchasedMovie>> GetUserMovies(int userId, int index, int itemCount)
-        {
-            var movies = await _purchasedMovieRepository.GetByUserIdAsync(userId, index, itemCount);
-            return movies;
         }
 
         private string ComputePasswordHash(string password, string salt)

@@ -14,10 +14,6 @@
     <None Remove="Enums\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Dtos\" />
-    <Folder Include="Entities\" />
-    <Folder Include="Interfaces\" />
     <Folder Include="Dtos\Tmdb\" />
-    <Folder Include="Enums\" />
   </ItemGroup>
 </Project>

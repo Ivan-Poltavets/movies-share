@@ -55,14 +55,6 @@ namespace MovieShare.API.Controllers
         {
 
         }
-
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> GetPurchasedMovies(int index = 0, int itemCount = 20)
-        {
-            var movies = await _userService.GetUserMovies(UserId, index, itemCount);
-            return Ok(movies);
-        }
     }
 }
 

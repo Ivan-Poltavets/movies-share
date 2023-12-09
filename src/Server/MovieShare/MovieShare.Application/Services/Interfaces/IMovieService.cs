@@ -10,6 +10,9 @@ namespace MovieShare.Application.Services.Interfaces
         Task<List<MovieDto>> GetMoviesByRatedAsync(RatedDto ratedDto, int page, int itemsCount);
         Task<List<MovieDto>> GetMoviesByTopRatedAsync(int page, int itemsCount);
         Task<Movie> GetMovieById(int movieId);
+        Task<MovieDto> CreateMovieAsync(MovieDto movieDto);
+        Task UpdateMovieAsync(MovieDto movieDto);
+        Task DeleteMovieAsync(int id);
     }
 }
 

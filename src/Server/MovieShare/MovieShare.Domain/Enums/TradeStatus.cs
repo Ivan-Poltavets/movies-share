@@ -1,6 +1,6 @@
 ﻿namespace MovieShare.Domain.Enums
 {
-	public enum ShareStatus
+	public enum TradeStatus
 	{
 		WaitingForResponse, Accepted, Declined
 	}

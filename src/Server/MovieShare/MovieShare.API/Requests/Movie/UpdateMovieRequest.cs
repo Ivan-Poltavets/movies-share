@@ -1,7 +1,7 @@
-﻿namespace MovieShare.Domain.Dtos
+﻿namespace MovieShare.API.Requests.Movie
 {
-	public class MovieDto
-	{
+    public class UpdateMovieRequest
+    {
         public int Id { get; set; }
         public bool Adult { get; set; }
         public string? BackdropPath { get; set; } = string.Empty;
@@ -18,4 +18,3 @@
         public decimal Price { get; set; }
     }
 }
-
