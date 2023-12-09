@@ -12,6 +12,9 @@ namespace MovieShare.Application.Services.Interfaces
         Task<Movie> GetMovieById(int movieId);
         Task<MovieDto> CreateMovieAsync(MovieDto movieDto);
         Task UpdateMovieAsync(MovieDto movieDto);
+        Task UpdateByAddingReviewAsync(ReviewDto reviewDto);
+        Task UpdateByUpdatingReviewAsync(ReviewDto newReview, ReviewDto prevReview);
+        Task UpdateByDeletingReviewAsync(ReviewDto reviewDto);
         Task DeleteMovieAsync(int id);
     }
 }

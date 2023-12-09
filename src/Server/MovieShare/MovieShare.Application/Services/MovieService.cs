@@ -46,8 +46,12 @@ namespace MovieShare.Application.Services
 
 		public async Task<Movie> GetMovieById(int movieId)
 		{
-			var movie = await _moviesRepository.GetByIdAsync(movieId);
-			return movie;
+            var movie = await _moviesRepository.GetByIdAsync(movieId);
+            if (movie == null)
+            {
+                throw new Exception("Movie not found");
+            }
+            return movie;
 		}
 
 		public async Task<MovieDto> CreateMovieAsync(MovieDto movieDto)
@@ -62,6 +66,32 @@ namespace MovieShare.Application.Services
 			var movie = _mapper.Map<Movie>(movieDto);
 			await _moviesRepository.UpdateAsync(movie);
 		}
+
+		public async Task UpdateByAddingReviewAsync(ReviewDto reviewDto)
+		{
+			var movie = await GetMovieById(reviewDto.MovieId);
+			var summary = movie.VoteAverage * movie.VoteCount + reviewDto.Rating;
+			movie.VoteCount += 1;
+			movie.VoteAverage = summary / movie.VoteCount;
+            await _moviesRepository.UpdateAsync(movie);
+        }
+
+		public async Task UpdateByUpdatingReviewAsync(ReviewDto newReview, ReviewDto prevReview)
+		{
+            var movie = await GetMovieById(newReview.MovieId);
+            var summary = movie.VoteCount * movie.VoteAverage - prevReview.Rating + newReview.Rating;
+            movie.VoteAverage = summary / movie.VoteCount;
+            await _moviesRepository.UpdateAsync(movie);
+        }
+
+		public async Task UpdateByDeletingReviewAsync(ReviewDto reviewDto)
+		{
+            var movie = await GetMovieById(reviewDto.MovieId);
+			var summary = movie.VoteCount * movie.VoteAverage - reviewDto.Rating;
+			movie.VoteCount -= 1;
+			movie.VoteAverage = summary / movie.VoteCount;
+			await _moviesRepository.UpdateAsync(movie);
+        }
 
 		public async Task DeleteMovieAsync(int id)
 		{

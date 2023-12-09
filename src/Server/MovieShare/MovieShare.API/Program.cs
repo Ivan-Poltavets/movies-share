@@ -27,7 +27,7 @@ if (app.Environment.IsDevelopment())
 using(var scope = app.Services.CreateScope())
 {
     var appContext = scope.ServiceProvider.GetRequiredService<MovieDbContext>();
-    //appContext.Database.EnsureDeleted();
+    appContext.Database.EnsureDeleted();
     var databaseExists = appContext.Database.GetService<IRelationalDatabaseCreator>().Exists();
 
     if (!databaseExists)

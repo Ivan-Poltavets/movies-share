@@ -30,6 +30,7 @@ namespace MovieShare.API
 			services.AddScoped<IGenreService, GenreService>();
 			services.AddScoped<IPaymentService, PaymentService>();
 			services.AddScoped<ITradeService, TradeService>();
+			services.AddScoped<IReviewService, ReviewService>();
 		}
 
 		public static void AddRepositories(this IServiceCollection services)
@@ -39,6 +40,7 @@ namespace MovieShare.API
             services.AddScoped<IGenreRepository, GenreRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
 			services.AddScoped<ITradeRepository, TradeRepository>();
+			services.AddScoped<IReviewRepository, ReviewRepository>();
         }
 
 		public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)

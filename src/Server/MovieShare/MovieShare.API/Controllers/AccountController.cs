@@ -2,7 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MovieShare.API.Requests;
+using MovieShare.API.Requests.Account;
 using MovieShare.Application.Services.Interfaces;
 using MovieShare.Domain.Dtos;
 
