@@ -13,7 +13,4 @@
     <None Remove="Dtos\Tmdb\" />
     <None Remove="Enums\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Dtos\Tmdb\" />
-  </ItemGroup>
 </Project>

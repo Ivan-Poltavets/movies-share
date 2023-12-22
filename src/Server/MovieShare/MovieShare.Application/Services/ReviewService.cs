@@ -34,7 +34,7 @@ namespace MovieShare.Application.Services
         public async Task<ReviewDto> CreateReviewAsync(ReviewDto reviewDto)
         {
             var review = _mapper.Map<Review>(reviewDto);
-            if(await _reviewRepository.IsExistByUserIdAsync(review.UserId))
+            if(await _reviewRepository.IsExistByUserIdAsync(review.UserId, reviewDto.MovieId))
             {
                 throw new Exception("Review already exist");
             }
@@ -42,7 +42,8 @@ namespace MovieShare.Application.Services
             await _reviewRepository.CreateAsync(review);
             await _movieService.UpdateByAddingReviewAsync(reviewDto);
 
-            return _mapper.Map<ReviewDto>(review);
+            var response = await _reviewRepository.GetReviewById(review.Id);
+            return _mapper.Map<ReviewDto>(response);
         }
 
         public async Task UpdateReviewAsync(ReviewDto reviewDto)

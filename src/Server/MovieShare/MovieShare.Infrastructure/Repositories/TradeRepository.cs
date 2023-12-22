@@ -16,6 +16,10 @@ namespace MovieShare.Infrastructure.Repositories
             return await _dbSet.Where(x => x.RequesterId == requesterId)
                 .Skip(index * itemCount)
                 .Take(itemCount)
+                .Include(x => x.RequesterMovie)
+                .Include(x => x.ReceiverMovie)
+                .Include(x => x.Requester)
+                .Include(x => x.Receiver)
                 .ToListAsync();
         }
 
@@ -24,6 +28,10 @@ namespace MovieShare.Infrastructure.Repositories
             return await _dbSet.Where(x => x.ReceiverId == receiverId)
                 .Skip(index * itemCount)
                 .Take(itemCount)
+                .Include(x => x.RequesterMovie)
+                .Include(x => x.ReceiverMovie)
+                .Include(x => x.Requester)
+                .Include(x => x.Receiver)
                 .ToListAsync();
         }
     }

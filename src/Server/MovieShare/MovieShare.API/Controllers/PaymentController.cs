@@ -23,9 +23,9 @@ namespace MovieShare.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PaymentDto>> GetPayments(int index = 0, int itemCount = 20)
+        public async Task<ActionResult<PaymentDto>> GetPayments(int index = 0, int itemsCount = 20)
         {
-            var payments = await _paymentService.GetPaymentsByUserIdAsync(UserId, index, itemCount);
+            var payments = await _paymentService.GetPaymentsByUserIdAsync(UserId, index, itemsCount);
             return Ok(payments);
         }
 

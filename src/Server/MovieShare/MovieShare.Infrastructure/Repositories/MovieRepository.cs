@@ -10,6 +10,15 @@ namespace MovieShare.Infrastructure.Repositories
 		{
 		}
 
+		public async Task<Movie?> GetMovieById(int id)
+		{
+			return await _dbSet
+				.Include(x => x.MovieGenres)
+				.ThenInclude(x => x.Genre)
+				.AsNoTracking()
+				.FirstOrDefaultAsync(x => x.Id == id);
+		}
+
 		public async Task<List<Movie>> GetByPopularityAsync(int page, int itemsCount)
 		{
 			var movies = await _dbSet

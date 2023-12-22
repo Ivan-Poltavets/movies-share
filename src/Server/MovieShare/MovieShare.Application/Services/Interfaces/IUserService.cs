@@ -7,6 +7,7 @@ namespace MovieShare.Application.Services.Interfaces
 	{
         Task<UserDto> CreateAsync(UserDto userDto);
         Task<UserDto> GetByLoginAndPassword(string login, string password);
+        Task<UserDto> GetUserById(int id);
     }
 }
 

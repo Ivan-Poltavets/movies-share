@@ -1,13 +1,13 @@
-﻿namespace MovieShare.Domain.Dtos
+﻿using MovieShare.Domain.Dtos;
+
+namespace MovieShare.API.Responses
 {
-    public class ReviewDto
+    public class ReviewResponse
     {
         public int Id { get; set; }
-        public int MovieId { get; set; }
-        public int UserId { get; set; }
         public double Rating { get; set; }
         public string Text { get; set; } = string.Empty;
         public DateTime DateTimeCreated { get; set; }
-        public UserDto User { get; set; }
+        public UserInfoReponse User { get; set; }
     }
 }

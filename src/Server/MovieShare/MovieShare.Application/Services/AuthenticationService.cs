@@ -41,6 +41,31 @@ namespace MovieShare.Application.Services
 
 			return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 		}
-	}
+
+        public string GetAdminTokenString(UserDto userDto, TimeSpan expirationPeriod)
+        {
+            var encodedSecret = Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"] ?? string.Empty);
+            var secretKey = new SymmetricSecurityKey(encodedSecret);
+
+            var signingCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
+                new(ClaimTypes.Name, userDto.Username),
+                new(ClaimTypes.Email, userDto.Email),
+				new("Role", "Administrator")
+            };
+
+            var tokenOptions = new JwtSecurityToken(
+                _configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.Add(expirationPeriod),
+                signingCredentials: signingCredentials
+                );
+
+            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+        }
+    }
 }
 

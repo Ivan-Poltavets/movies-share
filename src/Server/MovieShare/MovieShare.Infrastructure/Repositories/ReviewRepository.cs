@@ -11,9 +11,16 @@ namespace MovieShare.Infrastructure.Repositories
             
         }
 
+        public async Task<Review?> GetReviewById(int id)
+        {
+            return await _dbSet.Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task<List<Review>> GetMovieReviews(int movieId, int index, int itemsCount)
         {
             return await _dbSet
+                .Include(x => x.User)
                 .Where(x => x.MovieId == movieId)
                 .OrderByDescending(x => x.DateTimeCreated)
                 .Skip(index * itemsCount)
@@ -26,9 +33,9 @@ namespace MovieShare.Infrastructure.Repositories
             return await _dbSet.FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movieId);
         }
 
-        public async Task<bool> IsExistByUserIdAsync(int userId)
+        public async Task<bool> IsExistByUserIdAsync(int userId, int movieId)
         {
-            return await _dbSet.FirstOrDefaultAsync(x => x.UserId == userId) != null;
+            return await _dbSet.FirstOrDefaultAsync(x => x.UserId == userId && x.MovieId == movieId) != null;
         }
     }
 }

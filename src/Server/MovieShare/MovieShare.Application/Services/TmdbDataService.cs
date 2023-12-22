@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using MovieShare.Application.Services.Interfaces;
 using MovieShare.Domain.Dtos;
+using MovieShare.Domain.Dtos.Tmdb;
 using MovieShare.Domain.Entities;
 using Newtonsoft.Json;
 
@@ -55,7 +56,7 @@ namespace MovieShare.Application.Services
 		public async Task<List<MovieResponseDto>> RequestAllPopularMoviesAsync()
 		{
 			var results = new List<MovieResponseDto>();
-			for(int i = 1; i <= 500; i++)
+			for(int i = 1; i <= 5; i++)
 			{
 				var result = await RequestPopularMoviesAsync(i);
 				if(result != null)
@@ -63,10 +64,11 @@ namespace MovieShare.Application.Services
                     results.AddRange(result);
                 }
 			}
+
 			return results;
 		}
 
-		public List<MovieGenre> ReturnMoviesGenres(List<MovieResponseDto> movieDtos)
+		public List<MovieGenre> ReturnMoviesGenres(List<MovieResponseDto> movieDtos, List<Movie> movies)
 		{
 			var moviesGenres = new List<MovieGenre>();
 			foreach(var movie in movieDtos)
@@ -76,7 +78,7 @@ namespace MovieShare.Application.Services
                     moviesGenres.Add(new MovieGenre
                     {
                         GenreId = genreId,
-                        MovieId = movie.id
+                        MovieId = movies.FirstOrDefault(x => x.TmdbId == movie.id)!.Id
                     });
                 }
             }
@@ -99,6 +101,29 @@ namespace MovieShare.Application.Services
 				}
 			}
 			return new byte[] {};
+		}
+
+		public async Task<List<Movie>> GetMoviesDetailsAsync(List<Movie> movies)
+		{
+			foreach(var movie in movies)
+			{
+                using (var httpClient = new HttpClient())
+                {
+                    var result = await httpClient.GetAsync($"https://api.themoviedb.org/3/movie/{movie.TmdbId}?api_key={_configuration["TmdbApi:ApiKey"]}");
+                    if (result.IsSuccessStatusCode)
+                    {
+						var detailsResponse = JsonConvert.DeserializeObject<MovieDetailsResponseDto>(await result.Content.ReadAsStringAsync());
+						movie.Budget = detailsResponse.budget;
+						movie.Revenue = detailsResponse.revenue;
+						movie.Runtime = detailsResponse.runtime;
+						movie.Tagline = detailsResponse.tagline;
+						movie.ImdbId = detailsResponse.imdb_id;
+						movie.Homepage = detailsResponse.homepage;
+                    }
+                }
+            }
+
+			return movies;
 		}
 	}
 }

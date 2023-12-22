@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieShare.API.Requests.Account;
+using MovieShare.API.Responses;
 using MovieShare.Application.Services.Interfaces;
 using MovieShare.Domain.Dtos;
 
@@ -54,6 +55,28 @@ namespace MovieShare.API.Controllers
         public void UploadUserImage(byte[] imageContent)
         {
 
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetUserInfo()
+        {
+            var user = await  _userService.GetUserById(UserId);
+            return Ok(_mapper.Map<UserInfoReponse>(user));
+        }
+
+        [HttpPost]
+        [Route("admin/login")]
+        public async Task<IActionResult> LoginAdmin(LoginRequest loginRequest)
+        {
+            var userDto = await _userService.GetByLoginAndPassword(loginRequest.Login, loginRequest.Password);
+
+            if (userDto == null)
+                return Unauthorized();
+
+            var expirationPeriod = TimeSpan.FromDays(int.Parse(_configuration["Jwt:ExpirationPeriodInMinutes"]));
+            var tokenString = _authenticationService.GetTokenString(userDto, expirationPeriod);
+            return Ok(tokenString);
         }
     }
 }

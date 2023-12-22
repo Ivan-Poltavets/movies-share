@@ -9,6 +9,7 @@ namespace MovieShare.Domain.Interfaces
         Task<List<Movie>> GetByRatedAsync(int minRated, int maxRated, int page, int itemsCount);
         Task<List<Movie>> GetByGenresAsync(List<Genre> genres, int page, int itemsCount);
         Task<decimal> GetPriceByMovieIdAsync(int movieId);
+        Task<Movie?> GetMovieById(int id);
     }
 }
 

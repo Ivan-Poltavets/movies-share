@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieShare.Domain.Entities;
+using MovieShare.Infrastructure.TypeConfigurations;
 
 namespace MovieShare.Infrastructure
 {
@@ -22,6 +23,7 @@ namespace MovieShare.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+			//modelBuilder.ApplyConfiguration(new MovieGenresTypeConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

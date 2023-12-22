@@ -10,5 +10,7 @@ namespace MovieShare.Domain.Dtos
         public DateTime DateTime { get; set; }
         public PaymentStatus Status { get; set; }
         public decimal Price { get; set; }
+
+        public MovieDto Movie { get; set; }
     }
 }

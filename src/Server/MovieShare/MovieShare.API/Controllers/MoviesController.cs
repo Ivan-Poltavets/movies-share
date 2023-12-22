@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieShare.API.Requests.Movie;
 using MovieShare.Application.Services.Interfaces;
@@ -51,6 +52,7 @@ namespace MovieShare.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = "RequireAdministrator")]
         [HttpPost]
         public async Task<IActionResult> CreateMovie([FromBody] CreateMovieRequest createMovieRequest)
         {
@@ -59,6 +61,7 @@ namespace MovieShare.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = "RequireAdministrator")]
         [HttpPut]
         public async Task<IActionResult> UpdateMovie([FromBody] UpdateMovieRequest updateMovieRequest)
         {
@@ -67,11 +70,19 @@ namespace MovieShare.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Policy = "RequireAdministrator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
             await _movieService.DeleteMovieAsync(id);
             return NoContent();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetMovieDetailsById(int id)
+        {
+            var result = await _movieService.GetMovieById(id);
+            return Ok(result);
         }
     }
 }

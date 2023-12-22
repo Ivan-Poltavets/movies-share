@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieShare.API.Requests.Genre;
 using MovieShare.Application.Services.Interfaces;
@@ -25,6 +26,7 @@ namespace MovieShare.API.Controllers
             return Ok(genres);
         }
 
+        [Authorize(Policy = "RequireAdministrator")]
         [HttpPost]
         public async Task<ActionResult<GenreDto>> CreateAsync(CreateGenreRequest createGenreRequest)
         {
@@ -33,6 +35,7 @@ namespace MovieShare.API.Controllers
             return StatusCode(201, createdGenre);
         }
 
+        [Authorize(Policy = "RequireAdministrator")]
         [HttpPut]
         public async Task<IActionResult> UpdateAsync(UpdateGenreRequest updateGenreRequest)
         {
@@ -41,6 +44,7 @@ namespace MovieShare.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Policy = "RequireAdministrator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGenreAsync(int id)
         {

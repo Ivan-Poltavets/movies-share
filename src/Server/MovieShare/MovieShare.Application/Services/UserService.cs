@@ -46,6 +46,14 @@ namespace MovieShare.Application.Services
             return _mapper.Map<UserDto>(result);
         }
 
+        public async Task<UserDto> GetUserById(int id)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            if(user == null)
+                throw new Exception("User not found");
+            return _mapper.Map<UserDto>(user);
+        }
+
         public async Task UploadUserImageAsync(int id, byte[] content)
         {
             var user = await _userRepository.GetByIdAsync(id);

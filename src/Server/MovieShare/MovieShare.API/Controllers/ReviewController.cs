@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieShare.API.Requests.Review;
+using MovieShare.API.Responses;
 using MovieShare.Application.Services.Interfaces;
 using MovieShare.Domain.Dtos;
 
@@ -22,10 +23,10 @@ namespace MovieShare.API.Controllers
 
         [HttpGet]
         [Route("movies/{movieId}/reviews")]
-        public async Task<ActionResult<ReviewDto>> GetMovieReviews(int movieId, int index = 0, int itemsCount = 20)
+        public async Task<ActionResult<ReviewResponse>> GetMovieReviews(int movieId, int index = 0, int itemsCount = 20)
         {
             var reviews = await _reviewService.GetMovieReviewsAsync(movieId, index, itemsCount);
-            return Ok(reviews);
+            return Ok(_mapper.Map<List<ReviewResponse>>(reviews));
         }
 
         [Authorize]
@@ -40,12 +41,12 @@ namespace MovieShare.API.Controllers
         [Authorize]
         [HttpPost]
         [Route("reviews")]
-        public async Task<ActionResult<ReviewDto>> CreateReviewAsync(CreateReviewRequest createReviewRequest)
+        public async Task<ActionResult<ReviewResponse>> CreateReviewAsync(CreateReviewRequest createReviewRequest)
         {
             var reviewDto = _mapper.Map<ReviewDto>(createReviewRequest);
             reviewDto.UserId = UserId;
             var result = await _reviewService.CreateReviewAsync(reviewDto);
-            return Ok(result);
+            return Ok(_mapper.Map<ReviewResponse>(result));
         }
 
         [Authorize]

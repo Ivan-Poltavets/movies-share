@@ -10,6 +10,8 @@ namespace MovieShare.Domain.Entities
 		public DateTime DateTime { get; set; }
 		public PaymentStatus Status { get; set; }
 		public decimal Price { get; set; }
+
+		public Movie Movie { get; set; }
 	}
 }
 

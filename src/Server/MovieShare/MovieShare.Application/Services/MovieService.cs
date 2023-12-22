@@ -46,7 +46,7 @@ namespace MovieShare.Application.Services
 
 		public async Task<Movie> GetMovieById(int movieId)
 		{
-            var movie = await _moviesRepository.GetByIdAsync(movieId);
+            var movie = await _moviesRepository.GetMovieById(movieId);
             if (movie == null)
             {
                 throw new Exception("Movie not found");

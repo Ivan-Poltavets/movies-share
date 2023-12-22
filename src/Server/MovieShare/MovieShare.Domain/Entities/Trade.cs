@@ -12,6 +12,12 @@ namespace MovieShare.Domain.Entities
 		public DateTime? Starts { get; set; }
 		public DateTime? Expires { get; set; }
 		public TradeStatus Status { get; set; } = TradeStatus.WaitingForResponse;
+
+		public Movie RequesterMovie { get; set; }
+		public Movie ReceiverMovie { get; set;}
+
+		public User Requester { get; set; }
+		public User Receiver { get; set; }
 	}
 }
 

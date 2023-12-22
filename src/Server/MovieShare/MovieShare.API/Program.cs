@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
 using MovieShare.API;
 using MovieShare.Infrastructure;
+using MovieShare.Application.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +11,23 @@ builder.Services.AddControllers();
 builder.Services.AddServices(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdministrator", 
+        policy => policy.RequireClaim("Role", "Administrator"));
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwagger();
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -27,9 +42,7 @@ if (app.Environment.IsDevelopment())
 using(var scope = app.Services.CreateScope())
 {
     var appContext = scope.ServiceProvider.GetRequiredService<MovieDbContext>();
-    appContext.Database.EnsureDeleted();
     var databaseExists = appContext.Database.GetService<IRelationalDatabaseCreator>().Exists();
-
     if (!databaseExists)
     {
         try
@@ -42,21 +55,25 @@ using(var scope = app.Services.CreateScope())
             Console.WriteLine($"Migration was failed: {ex.Message}");
         }
 
-        //var tmdbDataService = scope.ServiceProvider.GetRequiredService<TmdbDataService>();
+        var tmdbdataservice = scope.ServiceProvider.GetRequiredService<ITmdbDataService>();
 
-        //var genres = await tmdbDataService.RequestGenresAsync();
-        //appContext.Genres.AddRange(genres);
+        var genres = await tmdbdataservice.RequestGenresAsync();
+        appContext.Genres.AddRange(genres);
+        appContext.SaveChanges();
 
-        //var movieDtos = await tmdbDataService.RequestAllPopularMoviesAsync();
-        //var movies = tmdbDataService.MapMovieDtosToMovie(movieDtos);
-        //appContext.Movies.AddRange(movies);
+        var moviedtos = await tmdbdataservice.RequestAllPopularMoviesAsync();
+        var movies = tmdbdataservice.MapMovieDtosToMovie(moviedtos);
+        movies = await tmdbdataservice.GetMoviesDetailsAsync(movies);
+        appContext.Movies.AddRange(movies);
+        appContext.SaveChanges();
 
-        //var moviesGenres = tmdbDataService.ReturnMoviesGenres(movieDtos);
-        //appContext.MoviesGenres.AddRange(moviesGenres);
-        //appContext.SaveChanges();
+        var moviesgenres = tmdbdataservice.ReturnMoviesGenres(moviedtos, movies);
+        appContext.MoviesGenres.AddRange(moviesgenres);
+        appContext.SaveChanges();
     }
 }
 
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

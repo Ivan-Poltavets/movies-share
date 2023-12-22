@@ -13,6 +13,7 @@ namespace MovieShare.Infrastructure.Repositories
 		public async Task<List<Payment>> GetByUserIdAsync(int userId, int index, int itemCount)
 		{
 			return await _dbSet.Where(x => x.UserId == userId)
+				.Include(x => x.Movie)
 				.Skip(index * itemCount)
 				.Take(itemCount)
 				.ToListAsync();
